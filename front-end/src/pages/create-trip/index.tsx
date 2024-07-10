@@ -9,6 +9,7 @@ import { InviteGuest } from './steps/invite-guest'
 
 export function CreateTripPage(){
     const navegate = useNavigate()
+    
     const [isGestInputOpen, setIsGestInputOpen] =  useState(false)
     const [isGestModal, setIsGestModal] =  useState(false)
     const [isConfirmTripModal, setConfirmTripModal] =  useState(false)

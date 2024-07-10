@@ -1,4 +1,5 @@
 import { ArrowRight, Calendar, MapPin, Settings2 } from "lucide-react"
+import { Button } from "../../../components/button"
 
 interface DestinationDateProps{
     isGestInputOpen: boolean
@@ -22,15 +23,17 @@ export function DestinationDate({closeGestInput, isGestInputOpen, openGestInput 
         <div className='w-px h-6 bg-zinc-800'></div>
 
        {isGestInputOpen ? (
-         <button onClick={closeGestInput} className='bg-zinc-900 text-zinc-200 rounded-lg px-5 py-2 font-medium flex items-center gap-2 hover:bg-zinc-700'>
-         ALterar local/data
-         <Settings2 className='size-5'/>
-       </button>
+        <Button onClick={closeGestInput} variant="secundary" >
+          ALterar local/data
+          <Settings2 className='size-5'/>
+        </Button>
+        
        ):(
-         <button onClick={openGestInput} className='bg-lime-300 text-lime-950 rounded-lg px-5 py-2 font-medium flex items-center gap-2 hover:bg-lime-400'>
+        <Button onClick={openGestInput} variant="primary" >
           Continuar
-         <ArrowRight className='size-5'/>
-       </button>
+          <ArrowRight className='size-5'/>
+        </Button>
+        
        )}
       </div>
     )
