@@ -39,8 +39,9 @@ export function ConfirmTripModal({closeConfirmTripModal, createTrip} : ConfirmTr
                
               <Button type="submit" variant="primary" size="full">
                 Confirmar criação da viagem
+                  <ArrowRight className='size-5'/>
               </Button>
-             
+              
              </form>
            </div>
          </div>
