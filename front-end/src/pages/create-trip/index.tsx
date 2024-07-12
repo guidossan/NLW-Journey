@@ -1,4 +1,4 @@
-import {  ArrowRight, UserRoundPlus } from 'lucide-react'
+
 
 import { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -6,6 +6,8 @@ import { InviteGuestModal } from './invite-guest-modal'
 import { ConfirmTripModal } from './confirm-trip-modal'
 import { DestinationDate } from './steps/destination-date'
 import { InviteGuest } from './steps/invite-guest'
+import { DateRange } from 'react-day-picker'
+import { api } from '../../lib/axios'
 
 export function CreateTripPage(){
     const navegate = useNavigate()
@@ -14,6 +16,11 @@ export function CreateTripPage(){
     const [isGestModal, setIsGestModal] =  useState(false)
     const [isConfirmTripModal, setConfirmTripModal] =  useState(false)
   
+    const [destination, setDestination]  = useState('')
+    const [ownerName, setOwnerName]  = useState('')
+    const [ownerEmail, setOwnerEmail]  = useState('')
+    const [evenStartAndEndDates ,setEvenStartAndEndDates] =  useState<DateRange |  undefined>()
+    
     const [emalsToInvite, setEmailsToInvate] = useState(['email@email.com'])
   
     function openGestInput(){
@@ -56,9 +63,40 @@ export function CreateTripPage(){
       const newEmailList = emalsToInvite.filter(email => email !== emailToRemove)
       setEmailsToInvate(newEmailList)
     }
-    function createTrip(event: FormEvent<HTMLFormElement>){
-        event.preventDefault()
-        navegate('/trips/123')
+    async function createTrip(event: FormEvent<HTMLFormElement>){
+      
+      
+      
+      event.preventDefault()
+      console.log(destination)
+      console.log(evenStartAndEndDates)
+      console.log(emalsToInvite)
+      console.log(ownerEmail)
+      console.log(ownerName)
+      
+      if(!destination){
+        return
+      }
+      if(!evenStartAndEndDates?.from || !evenStartAndEndDates?.to){
+        return
+      }
+      if(emalsToInvite.length === 0){
+        return
+      }
+      if(!ownerEmail || !ownerName){
+        return
+      }
+      const response = await api.post('/trips', {
+        destination: destination,
+        emails_to_invite: emalsToInvite,
+        owner_name: ownerName,
+        owner_email: ownerEmail,
+        starts_at: evenStartAndEndDates.from,
+        ends_at: evenStartAndEndDates.to
+    })
+      const { tripId } =response.data
+      console.log(response.data)
+      navegate(`/trips/${tripId}`)
     }
     return (
       <div className='w-full h-screen flex items-center justify-center shadow-shape bg-patter bg-no-repeat bg-center'>
@@ -72,7 +110,10 @@ export function CreateTripPage(){
             <DestinationDate
             closeGestInput={closeGestInput} 
             isGestInputOpen={isGestInputOpen} 
-            openGestInput={openGestInput}/>
+            openGestInput={openGestInput}
+            setDestination={setDestination}
+            evenStartAndEndDates={evenStartAndEndDates}
+            setEvenStartAndEndDates={setEvenStartAndEndDates}/>
   
             {isGestInputOpen ? (
               <InviteGuest 
@@ -100,7 +141,9 @@ export function CreateTripPage(){
          {isConfirmTripModal ? (
            <ConfirmTripModal 
            closeConfirmTripModal={closeConfirmTripModal} 
-           createTrip={createTrip}/>
+           createTrip={createTrip}
+           setOwnerName={setOwnerName}
+           setOwnerEmail={setOwnerEmail}/>
          ) : null}
   
       </div>
